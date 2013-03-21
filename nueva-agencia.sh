@@ -105,7 +105,7 @@ echo -e "yes\n" | ./manage.py collectstatic
 ./manage.py compilemessages
 
 echo "Se inicia la instalación de datos para la aplicación"
-./manage.py loaddata $("$INSTALL_SCRIPTS_DIR/utils/get_module_path.py" 'iamsoft.agencia.perfil')/fixtures/perfil_initial_data.yaml
+./manage.py loaddata $("$INSTALL_SCRIPTS_DIR/utils/get_module_path.py" 'iampacks.agencia.perfil')/fixtures/perfil_initial_data.yaml
 ./manage.py loadgroups
 
 sudo ./manage cities_light

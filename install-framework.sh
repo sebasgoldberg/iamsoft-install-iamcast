@@ -35,6 +35,7 @@ then
 fi
 
 a2enmod ssl
+a2enmod rewrite
 service apache restart
 
 apt-get install python-coverage
