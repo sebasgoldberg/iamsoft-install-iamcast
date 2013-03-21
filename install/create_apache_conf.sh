@@ -34,4 +34,4 @@ echo "Certificado (${AGENCIA}.pem) y clave (${AGENCIA}.key) generados en /etc/ap
 
 a2ensite "${AGENCIA}"
 a2ensite "${AGENCIA}-ssl"
-service apache2 restart
+service apache2 reload

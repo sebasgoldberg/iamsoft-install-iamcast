@@ -97,6 +97,7 @@ chmod 777 -R uploads
 mkdir collectedstatic
 
 ./install/bootstrap.sh
+./install/jquery.sh "$WD_AGENCIA" "alternativa"
 
 echo -e "no\n" | ./manage.py syncdb
 ./manage.py migrate
