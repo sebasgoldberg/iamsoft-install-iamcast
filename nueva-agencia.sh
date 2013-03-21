@@ -108,12 +108,12 @@ echo "Se inicia la instalación de datos para la aplicación"
 ./manage.py loaddata $("$INSTALL_SCRIPTS_DIR/utils/get_module_path.py" 'iamsoft.agencia.perfil')/fixtures/perfil_initial_data.yaml
 ./manage.py loadgroups
 
-#sudo ./manage cities_light
-CIUDADES_DB_NAME='ciudades'
-echo "A continuación se realizara la copia de los datos de ciudades. Se precisa la clave del usuario root:"
-(echo "insert into ${DB_NAME}.cities_light_country select * from ${CIUDADES_DB_NAME}.cities_light_country;"
-echo "insert into ${DB_NAME}.cities_light_region select * from ${CIUDADES_DB_NAME}.cities_light_region;"
-echo "insert into ${DB_NAME}.cities_light_city select * from ${CIUDADES_DB_NAME}.cities_light_city;")|mysql -u root -p
+sudo ./manage cities_light
+#CIUDADES_DB_NAME='ciudades'
+#echo "A continuación se realizara la copia de los datos de ciudades. Se precisa la clave del usuario root:"
+#(echo "insert into ${DB_NAME}.cities_light_country select * from ${CIUDADES_DB_NAME}.cities_light_country;"
+#echo "insert into ${DB_NAME}.cities_light_region select * from ${CIUDADES_DB_NAME}.cities_light_region;"
+#echo "insert into ${DB_NAME}.cities_light_city select * from ${CIUDADES_DB_NAME}.cities_light_city;")|mysql -u root -p
 
 sudo "$INSTALL_SCRIPTS_DIR/install/create_apache_conf.sh" "$AGENCIA" "$DOMINIO" "$WD_AGENCIA" "$INSTALL_SCRIPTS_DIR/templates"
 
