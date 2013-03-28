@@ -1,3 +1,4 @@
+#!/bin/bash
 if [ $# -ne 2 ]
 then
   echo "ERROR: El script debe ser llamado como: $0 <directorio de trabajo proyecto> <nombre del proyecto>"

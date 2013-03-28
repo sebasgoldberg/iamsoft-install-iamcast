@@ -1,3 +1,4 @@
+#!/bin/bash
 pip install --upgrade django-crispy-forms
 
 if [ $? -ne 0 ]

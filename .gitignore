@@ -1,0 +1,6 @@
+tags
+*.swp
+*.swo
+*.pyc
+ambiente.py
+.coverage

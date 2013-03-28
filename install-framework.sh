@@ -11,6 +11,8 @@ apt-get install mercurial #necesario para hacer el pull de algunos pagetes a ser
 apt-get install unzip
 apt-get install gettext
 apt-get install python-pip
+apt-get install curl
+
 pip install Django
 
 # Instalacion de paquete para manejo de thumbnails

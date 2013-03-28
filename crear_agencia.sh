@@ -1,7 +1,7 @@
 #!/bin/bash
-if [ $# -ne 5 ]
+if [ $# -ne 8 ]
 then
-  echo "$0 <ID_AGENCIA> <SLUG_AGENCIA> <GMAIL_USER> <GMAIL_PASS> <DOMINIO>"
+  echo "$0 <ID_AGENCIA> <SLUG_AGENCIA> <GMAIL_USER> <GMAIL_PASS> <DOMINIO> <UBICACION_INSTALACION> <SUPER_USUARIO> <CLAVE_SUPER_USUARIO>"
   exit 1
 fi
 
@@ -10,6 +10,9 @@ SLUG_AGENCIA="$2"
 GMAIL_USER="$3"
 GMAIL_PASS="$4"
 DOMINIO="$5"
+UBICACION_INSTALACION="$6"
+SUPER_USUARIO="$7"
+CLAVE_SUPER_USUARIO="$8"
 
 INSTALL_SCRIPTS_DIR="$(readlink -f "$(dirname "$0")")"
 
@@ -17,9 +20,24 @@ AGENCIA="${SLUG_AGENCIA}_${ID_AGENCIA}"
 CARPETA_AGENCIA="$AGENCIA"
 DB_NAME="$AGENCIA"
 DB_USER="$AGENCIA"
-DB_PASS="${AGENCIA}24582"
+DB_PASS="$CLAVE_SUPER_USUARIO"
 
-cd ..
+cd "$INSTALL_SCRIPTS_DIR"
+MYSQL_USER="$(python -c "from ambiente import ambiente; print ambiente.mysql.usuario")"
+if [ $? -ne 0 ]
+then
+  echo "No se ha podido obtener usuario mysql de ambiente.py"
+  exit 1
+fi
+
+MYSQL_PASS="$(python -c "from ambiente import ambiente; print ambiente.mysql.clave")"
+if [ $? -ne 0 ]
+then
+  echo "No se ha podido obtener clave mysql de ambiente.py"
+  exit 1
+fi
+
+cd "$UBICACION_INSTALACION"
 
 mkdir "$CARPETA_AGENCIA"
 
@@ -32,7 +50,7 @@ fi
 cd "$CARPETA_AGENCIA"
 WD_AGENCIA=$(pwd)
 git init
-git pull git://github.com/sebasgoldberg/agencia.git
+git pull https://github.com/sebasgoldberg/agencia.git
 
 if [ $? -ne 0 ]
 then
@@ -45,7 +63,7 @@ echo "Se procede a crear base de datos y usuario de base de datos, por favor int
 (echo "create database $DB_NAME character set utf8;"
 echo "create user '$DB_USER'@'localhost' identified by '$DB_PASS';"
 echo "grant all on $DB_NAME.* to $DB_USER;"
-) | mysql -u root -p
+) | mysql -u "$MYSQL_USER" "-p${MYSQL_PASS}"
 
 if [ $? -ne 0 ]
 then
@@ -97,7 +115,9 @@ chmod 777 -R uploads
 mkdir collectedstatic
 
 ./install/bootstrap.sh
-./install/jquery.sh "$WD_AGENCIA" "alternativa"
+"$INSTALL_SCRIPTS_DIR/install/jquery.sh" "$WD_AGENCIA" "alternativa"
+
+export DJANGO_SETTINGS_MODULE="alternativa.settings"
 
 echo -e "no\n" | ./manage.py syncdb
 ./manage.py migrate
@@ -108,12 +128,14 @@ echo "Se inicia la instalación de datos para la aplicación"
 ./manage.py loaddata $("$INSTALL_SCRIPTS_DIR/utils/get_module_path.py" 'iampacks.agencia.perfil')/fixtures/perfil_initial_data.yaml
 ./manage.py loadgroups
 
-sudo ./manage cities_light
-#CIUDADES_DB_NAME='ciudades'
-#echo "A continuación se realizara la copia de los datos de ciudades. Se precisa la clave del usuario root:"
-#(echo "insert into ${DB_NAME}.cities_light_country select * from ${CIUDADES_DB_NAME}.cities_light_country;"
-#echo "insert into ${DB_NAME}.cities_light_region select * from ${CIUDADES_DB_NAME}.cities_light_region;"
-#echo "insert into ${DB_NAME}.cities_light_city select * from ${CIUDADES_DB_NAME}.cities_light_city;")|mysql -u root -p
+#sudo ./manage cities_light
+#@todo Agregar en ña instalación del framework la carga de ciudades
+CIUDADES_DB_NAME='ciudades'
+echo "A continuación se realizara la copia de los datos de ciudades. Se precisa la clave del usuario root:"
+(echo "insert into ${DB_NAME}.cities_light_country select * from ${CIUDADES_DB_NAME}.cities_light_country;"
+echo "insert into ${DB_NAME}.cities_light_region select * from ${CIUDADES_DB_NAME}.cities_light_region;"
+echo "insert into ${DB_NAME}.cities_light_city select * from ${CIUDADES_DB_NAME}.cities_light_city;"
+) | mysql -u "$MYSQL_USER" "-p${MYSQL_PASS}"
 
 sudo "$INSTALL_SCRIPTS_DIR/install/create_apache_conf.sh" "$AGENCIA" "$DOMINIO" "$WD_AGENCIA" "$INSTALL_SCRIPTS_DIR/templates"
 

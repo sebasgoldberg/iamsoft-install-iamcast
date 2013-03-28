@@ -1,3 +1,4 @@
+#!/bin/bash
 (echo "drop user reliquia_2;"
 echo "drop user 'reliquia_2'@'localhost';"
 echo "drop database reliquia_2;")|mysql -u root -p

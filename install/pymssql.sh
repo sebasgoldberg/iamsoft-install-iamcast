@@ -1,3 +1,4 @@
+#!/bin/bash
 #Instalacion del modulo python para SQL Server
 [ $# -gt 0 ] && forzar_instalacion_pymssql=$1
 
