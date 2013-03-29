@@ -1,10 +1,10 @@
 <IfModule mod_ssl.c>
-<VirtualHost _default_:8081>
+<VirtualHost _default_:{{PUERTO_HTTPS}}>
 	ServerAdmin sebas.goldberg@gmail.com
-	ServerName {{DOMINIO}}:8081
+	ServerName {{DOMINIO}}:{{PUERTO_HTTPS}}
 
     RewriteEngine On
-    RewriteRule ^(/uploads/.*)$ http://{{DOMINIO}}:8080$1
+    RewriteRule ^(/uploads/.*)$ http://{{DOMINIO}}:{{PUERTO_HTTP}}$1
 
     WSGIDaemonProcess {{AGENCIA}}_ssl python-path={{WD_AGENCIA}}
     WSGIProcessGroup {{AGENCIA}}_ssl

@@ -1,7 +1,7 @@
 #!/bin/bash
-if [ $# -ne 8 ]
+if [ $# -ne 11 ]
 then
-  echo "$0 <ID_AGENCIA> <SLUG_AGENCIA> <GMAIL_USER> <GMAIL_PASS> <DOMINIO> <UBICACION_INSTALACION> <SUPER_USUARIO> <CLAVE_SUPER_USUARIO>"
+  echo "$0 <ID_AGENCIA> <SLUG_AGENCIA> <GMAIL_USER> <GMAIL_PASS> <DOMINIO> <PUERTO_HTTP> <PUERTO_HTTPS> <UBICACION_INSTALACION> <SUPER_USUARIO> <CLAVE_SUPER_USUARIO> <ZONOMI_API_KEY>"
   exit 1
 fi
 
@@ -10,9 +10,12 @@ SLUG_AGENCIA="$2"
 GMAIL_USER="$3"
 GMAIL_PASS="$4"
 DOMINIO="$5"
-UBICACION_INSTALACION="$6"
-SUPER_USUARIO="$7"
-CLAVE_SUPER_USUARIO="$8"
+PUERTO_HTTP="$6"
+PUERTO_HTTPS="$7"
+UBICACION_INSTALACION="$8"
+SUPER_USUARIO="$9"
+CLAVE_SUPER_USUARIO="${10}"
+ZONOMI_API_KEY="${11}"
 
 INSTALL_SCRIPTS_DIR="$(readlink -f "$(dirname "$0")")"
 
@@ -71,13 +74,15 @@ then
   exit 1
 fi
 
-
+# @todo quitar PUERTO_HTTP en la asignación de dominio para esto hay que modificar paquete agencia
 (echo "# coding=utf-8"
 echo "class ambiente:"
 echo "  productivo=True"
 echo "  app_in_dev=None"
 echo ""
-echo "  dominio='${DOMINIO}:8080'"
+echo "  dominio='${DOMINIO}:${PUERTO_HTTP}'"
+echo "  puerto_http='${PUERTO_HTTP}'"
+echo "  puerto_https='${PUERTO_HTTPS}'"
 echo ""
 echo "  class db:"
 echo "    name='$DB_NAME'"
@@ -90,7 +95,18 @@ echo "  class email:"
 echo "    host = 'smtp.gmail.com'"
 echo "    user = '$GMAIL_USER'"
 echo "    password = '$GMAIL_PASS'"
-echo "    port = 587") > alternativa/ambiente.py
+echo "    port = 587"
+echo "  @staticmethod"
+echo "  def get_base_url():"
+echo "    return ambiente.get_base_http()"
+echo ""
+echo "  @staticmethod"
+echo "  def get_base_http():"
+echo "    return 'http://%s:%s'%(ambiente.dominio,ambiente.puerto_http)"
+echo ""
+echo "  @staticmethod"
+echo "  def get_base_https():"
+echo "    return 'https://%s:%s'%(ambiente.dominio,ambiente.puerto_https)") > alternativa/ambiente.py
 
 if [ $? -ne 0 ]
 then
@@ -137,8 +153,18 @@ echo "insert into ${DB_NAME}.cities_light_region select * from ${CIUDADES_DB_NAM
 echo "insert into ${DB_NAME}.cities_light_city select * from ${CIUDADES_DB_NAME}.cities_light_city;"
 ) | mysql -u "$MYSQL_USER" "-p${MYSQL_PASS}"
 
-sudo "$INSTALL_SCRIPTS_DIR/install/create_apache_conf.sh" "$AGENCIA" "$DOMINIO" "$WD_AGENCIA" "$INSTALL_SCRIPTS_DIR/templates"
+sudo "$INSTALL_SCRIPTS_DIR/install/create_apache_conf.sh" "$AGENCIA" "$DOMINIO" "$PUERTO_HTTP" "$PUERTO_HTTPS" "$WD_AGENCIA" "$INSTALL_SCRIPTS_DIR/templates"
 
-sudo "$INSTALL_SCRIPTS_DIR/install/set_ddns.sh" "$DOMINIO" "cerebro"
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
+
+sudo "$INSTALL_SCRIPTS_DIR/install/set_ddns.sh" "$DOMINIO" "cerebro" "$ZONOMI_API_KEY"
+
+if [ $? -ne 0 ]
+then
+  exit 1
+fi
 
 exit 0
