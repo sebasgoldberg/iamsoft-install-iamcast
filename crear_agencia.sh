@@ -42,16 +42,30 @@ fi
 
 cd "$UBICACION_INSTALACION"
 
-mkdir "$CARPETA_AGENCIA"
-
 if [ $? -ne 0 ]
 then
-  echo "ERROR: No se ha podido crear la carpeta $CARPETA_AGENCIA"
+  echo "ERROR: No se ha podido acceder a la ubicación de instalación $UBICACION_INSTALACION"
   exit 1
 fi
 
-cd "$CARPETA_AGENCIA"
-WD_AGENCIA=$(pwd)
+WD_AGENCIA="${UBICACION_INSTALACION}/${CARPETA_AGENCIA}"
+
+mkdir "$WD_AGENCIA"
+
+if [ $? -ne 0 ]
+then
+  echo "ERROR: No se ha podido crear la carpeta $WD_AGENCIA"
+  exit 1
+fi
+
+cd "$WD_AGENCIA"
+
+if [ $? -ne 0 ]
+then
+  echo "ERROR: No se ha podido acceder a la carpeta de trabajo de la agencia: $WD_AGENCIA"
+  exit 1
+fi
+
 git init
 git pull https://github.com/sebasgoldberg/agencia.git
 
@@ -61,7 +75,7 @@ then
   exit 1
 fi
 
-echo "Se procede a crear base de datos y usuario de base de datos, por favor introduzca la contraseña del usuario root:"
+echo "Se procede a crear base de datos y usuario de base de datos (puede ser que sea necesario introducir la contraseña del usuario root)."
 
 (echo "create database $DB_NAME character set utf8;"
 echo "create user '$DB_USER'@'localhost' identified by '$DB_PASS';"
@@ -130,19 +144,72 @@ chmod 777 -R uploads
 
 mkdir collectedstatic
 
-./install/bootstrap.sh
+"$INSTALL_SCRIPTS_DIR/install/bootstrap.sh" "${WD_AGENCIA}/alternativa/static"
+
+if [ $? -ne 0 ]
+then
+  echo "Error al ejecutar $INSTALL_SCRIPTS_DIR/install/bootstrap.sh ${WD_AGENCIA}/alternativa/static"
+  exit 1
+fi
+
 "$INSTALL_SCRIPTS_DIR/install/jquery.sh" "$WD_AGENCIA" "alternativa"
+
+if [ $? -ne 0 ]
+then
+  echo "Error al ejecutar $INSTALL_SCRIPTS_DIR/install/jquery.sh $WD_AGENCIA alternativa"
+  exit 1
+fi
 
 export DJANGO_SETTINGS_MODULE="alternativa.settings"
 
 echo -e "no\n" | ./manage.py syncdb
+
+if [ $? -ne 0 ]
+then
+  echo "Error al ejecutar syncdb"
+  exit 1
+fi
+
 ./manage.py migrate
+
+if [ $? -ne 0 ]
+then
+  echo "Error al ejecutar migrate"
+  exit 1
+fi
+
 echo -e "yes\n" | ./manage.py collectstatic
+
+if [ $? -ne 0 ]
+then
+  echo "Error al ejecutar collectstatic"
+  exit 1
+fi
+
 ./manage.py compilemessages
+
+if [ $? -ne 0 ]
+then
+  echo "Error al ejecutar compilemessages"
+  exit 1
+fi
 
 echo "Se inicia la instalación de datos para la aplicación"
 ./manage.py loaddata $("$INSTALL_SCRIPTS_DIR/utils/get_module_path.py" 'iampacks.agencia.perfil')/fixtures/perfil_initial_data.yaml
+
+if [ $? -ne 0 ]
+then
+  echo "Error al ejecutar cargar fixtures de perfiles"
+  exit 1
+fi
+
 ./manage.py loadgroups
+
+if [ $? -ne 0 ]
+then
+  echo "Error al ejecutar loadgroups"
+  exit 1
+fi
 
 #sudo ./manage cities_light
 #@todo Agregar en ña instalación del framework la carga de ciudades
@@ -153,10 +220,17 @@ echo "insert into ${DB_NAME}.cities_light_region select * from ${CIUDADES_DB_NAM
 echo "insert into ${DB_NAME}.cities_light_city select * from ${CIUDADES_DB_NAME}.cities_light_city;"
 ) | mysql -u "$MYSQL_USER" "-p${MYSQL_PASS}"
 
+if [ $? -ne 0 ]
+then
+  echo "Error al cargar ciudades, regiones y paises"
+  exit 1
+fi
+
 sudo "$INSTALL_SCRIPTS_DIR/install/create_apache_conf.sh" "$AGENCIA" "$DOMINIO" "$PUERTO_HTTP" "$PUERTO_HTTPS" "$WD_AGENCIA" "$INSTALL_SCRIPTS_DIR/templates"
 
 if [ $? -ne 0 ]
 then
+  echo "Error al crear la configuración del servidor WEB"
   exit 1
 fi
 
@@ -164,6 +238,7 @@ sudo "$INSTALL_SCRIPTS_DIR/install/set_ddns.sh" "$DOMINIO" "cerebro" "$ZONOMI_AP
 
 if [ $? -ne 0 ]
 then
+  echo "Error al configurar DNS."
   exit 1
 fi
 
