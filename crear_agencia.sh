@@ -88,13 +88,12 @@ then
   exit 1
 fi
 
-# @todo quitar PUERTO_HTTP en la asignación de dominio para esto hay que modificar paquete agencia
 (echo "# coding=utf-8"
 echo "class ambiente:"
 echo "  productivo=True"
 echo "  app_in_dev=None"
 echo ""
-echo "  dominio='${DOMINIO}:${PUERTO_HTTP}'"
+echo "  dominio='${DOMINIO}'"
 echo "  puerto_http='${PUERTO_HTTP}'"
 echo "  puerto_https='${PUERTO_HTTPS}'"
 echo ""
