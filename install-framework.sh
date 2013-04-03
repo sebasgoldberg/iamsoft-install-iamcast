@@ -13,15 +13,12 @@ apt-get install gettext
 apt-get install python-pip
 apt-get install curl
 
-pip install Django
+pip install Django==1.4.3
 
 # Instalacion de paquete para manejo de thumbnails
 pip install django-imagekit
 
-INSTALL_SCRIPT_DIR=$(pwd)
-
 # Instalacion de PyYaml
-cd "$INSTALL_SCRIPT_DIR"
 mkdir pyyaml
 cd pyyaml
 hg clone https://bitbucket.org/xi/pyyaml

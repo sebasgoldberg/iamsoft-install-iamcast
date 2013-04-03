@@ -3,8 +3,8 @@ echo "Se realiza la instalación de los paquetes de iamsoft."
 
 cd "$(./utils/get_dist_packages_path.py)"
 
-mkdir iamsoft
-cd iamsoft
+mkdir iampacks
+cd iampacks
 touch __init__.py
 
 mkdir cross
