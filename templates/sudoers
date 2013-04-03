@@ -1,0 +1,4 @@
+{{user}} ALL=NOPASSWD:{{install_wd}}/install/create_apache_conf.sh
+{{user}} ALL=NOPASSWD:{{install_wd}}/install/set_ddns.sh
+{{user}} ALL=NOPASSWD:{{install_wd}}/uninstall/disable_apache2_conf.sh
+{{user}} ALL=NOPASSWD:{{install_wd}}/uninstall/unset_ddns.sh

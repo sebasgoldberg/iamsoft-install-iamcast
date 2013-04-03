@@ -1,4 +1,6 @@
 #!/bin/bash
+INSTALL_SCRIPTS_DIR="$(dirname "$(readlink -f "$0")")"
+
 apt-get install make
 apt-get install bc
 apt-get install apache2
@@ -43,6 +45,11 @@ apt-get install python-coverage
 ./install/cities_light.sh
 #./install/smart_selects.sh
 
-./install/iamsoft.sh
+./install/iampacks.sh
+
+
+IAMSOFT_WD="$(readlink -f "$INSTALL_SCRIPTS_DIR/../iamsoft")"
+
+./install/iamsoft.sh "$IAMSOFT_WD" "$INSTALL_SCRIPTS_DIR"
 
 echo "Framework listo para crear agencias."
