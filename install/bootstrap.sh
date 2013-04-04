@@ -1,11 +1,11 @@
 #!/bin/bash
 if [ $# -eq 0 ]
 then
-  STATIC_DIR="$(pwd)/alternativa/static"
-  echo "Se asigna por default el directorio static '${STATIC_DIR}'"
-else
-  STATIC_DIR="$1"
+  echo "ERROR: Uso: $0 <STATIC_DIR>"
+  exit 1
 fi
+
+STATIC_DIR="$1"
 
 cd "$STATIC_DIR"
 

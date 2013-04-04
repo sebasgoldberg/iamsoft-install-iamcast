@@ -45,8 +45,7 @@ apt-get install python-coverage
 ./install/cities_light.sh
 #./install/smart_selects.sh
 
-./install/iampacks.sh
-
+./install/iampacks.sh "$INSTALL_SCRIPTS_DIR"
 
 IAMSOFT_WD="$(readlink -f "$INSTALL_SCRIPTS_DIR/../iamsoft")"
 

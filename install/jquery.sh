@@ -1,22 +1,20 @@
 #!/bin/bash
-if [ $# -ne 2 ]
+if [ $# -ne 1 ]
 then
-  echo "ERROR: El script debe ser llamado como: $0 <directorio de trabajo proyecto> <nombre del proyecto>"
+  echo "ERROR: El script debe ser llamado como: $0 <STATIC_DIR>"
   exit 1
 fi
 
-WD="$1"
-PROJECT_NAME="$2"
-
-cd "$WD/$PROJECT_NAME"
+STATIC_DIR="$1"
+cd "$STATIC_DIR"
 
 if [ $? -ne 0 ]
 then
-  echo "ERROR: No se ha encontrado ruta '$WD/$PROJECT_NAME'"
+  echo "ERROR: No se ha encontrado ruta '$STATIC_DIR'"
   exit 1
 fi
 
-mkdir -p static/jquery
+mkdir jquery
 
 if [ $? -ne 0 ]
 then
@@ -24,7 +22,7 @@ then
   exit 1
 fi
 
-cd "static/jquery"
+cd "jquery"
 
 URL_JQUERY='https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'
 

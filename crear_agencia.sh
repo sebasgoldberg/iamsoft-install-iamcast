@@ -143,22 +143,6 @@ chmod 777 -R uploads
 
 mkdir collectedstatic
 
-"$INSTALL_SCRIPTS_DIR/install/bootstrap.sh" "${WD_AGENCIA}/alternativa/static"
-
-if [ $? -ne 0 ]
-then
-  echo "Error al ejecutar $INSTALL_SCRIPTS_DIR/install/bootstrap.sh ${WD_AGENCIA}/alternativa/static"
-  exit 1
-fi
-
-"$INSTALL_SCRIPTS_DIR/install/jquery.sh" "$WD_AGENCIA" "alternativa"
-
-if [ $? -ne 0 ]
-then
-  echo "Error al ejecutar $INSTALL_SCRIPTS_DIR/install/jquery.sh $WD_AGENCIA alternativa"
-  exit 1
-fi
-
 export DJANGO_SETTINGS_MODULE="alternativa.settings"
 
 echo -e "no\n" | ./manage.py syncdb
