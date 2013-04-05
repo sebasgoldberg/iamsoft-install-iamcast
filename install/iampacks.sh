@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Se realiza la instalación de los paquetes de iamsoft."
 
-if [ $# -ne 0 ]
+if [ $# -ne 1 ]
 then
   echo "ERROR: Uso $0 <INSTALL_SCRIPTS_DIR>"
   exit 1
