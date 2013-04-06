@@ -1,8 +1,20 @@
 #!/bin/bash
 
-# @todo pull del GIT
+if [ $# -ne 1 ]
+then
+  echo "ERROR: Uso: $0 <CIUDADES_WD>"
+fi
+
+$CIUDADES_WD="$1"
 
 echo "Se procede a crear base de datos y usuario de base de datos, por favor introduzca la contraseña del usuario root:"
+
+mkdir -p "$CIUDADES_WD"
+
+cd "$CIUDADES_WD"
+
+git init
+git pull https://github.com/sebasgoldberg/iamsoft_ciudades.git
 
 DB_NAME='ciudades'
 DB_USER='ciudades'

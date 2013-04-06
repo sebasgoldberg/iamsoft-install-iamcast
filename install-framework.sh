@@ -19,6 +19,7 @@ pip install Django==1.4.3
 
 # Instalacion de paquete para manejo de thumbnails
 pip install django-imagekit
+pip install requests
 
 # Instalacion de PyYaml
 mkdir pyyaml
@@ -50,5 +51,7 @@ apt-get install python-coverage
 IAMSOFT_WD="$(readlink -f "$INSTALL_SCRIPTS_DIR/../iamsoft")"
 
 ./install/iamsoft.sh "$IAMSOFT_WD" "$INSTALL_SCRIPTS_DIR"
+
+./install/install_ciudades.sh "$(readlink -f "$INSTALL_SCRIPTS_DIR/..")/ciudades"
 
 echo "Framework listo para crear agencias."
