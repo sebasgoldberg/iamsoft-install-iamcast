@@ -52,6 +52,21 @@ IAMSOFT_WD="$(readlink -f "$INSTALL_SCRIPTS_DIR/../iamsoft")"
 
 ./install/iamsoft.sh "$IAMSOFT_WD" "$INSTALL_SCRIPTS_DIR"
 
-./install/install_ciudades.sh "$(readlink -f "$INSTALL_SCRIPTS_DIR/..")/ciudades"
+
+
+
+CIUDADES_WD="$(readlink -f "$INSTALL_SCRIPTS_DIR/..")/ciudades"
+
+mkdir "$CIUDADES_WD"
+
+if [ $? -ne 0 ]
+then
+  echo "ERROR: No se ha podido crear carpeta $CIUDADES_WD"
+  exit 1
+fi
+
+cd "$CIUDADES_WD"
+
+"$INSTALL_SCRIPTS_DIR/install/install_ciudades.sh"
 
 echo "Framework listo para crear agencias."
