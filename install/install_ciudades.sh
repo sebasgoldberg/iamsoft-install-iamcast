@@ -9,7 +9,13 @@ $CIUDADES_WD="$1"
 
 echo "Se procede a crear base de datos y usuario de base de datos, por favor introduzca la contraseña del usuario root:"
 
-mkdir -p "$CIUDADES_WD"
+mkdir "$CIUDADES_WD"
+
+if [ $? -ne 0 ]
+then
+  echo "ERROR: No se ha podido crear carpeta $CIUDADES_WD"
+  exit 1
+fi
 
 cd "$CIUDADES_WD"
 
