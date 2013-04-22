@@ -1,7 +1,7 @@
 #!/bin/bash
-if [ $# -ne 11 ]
+if [ $# -ne 12 ]
 then
-  echo "$0 <ID_AGENCIA> <SLUG_AGENCIA> <GMAIL_USER> <GMAIL_PASS> <DOMINIO> <PUERTO_HTTP> <PUERTO_HTTPS> <UBICACION_INSTALACION> <SUPER_USUARIO> <CLAVE_SUPER_USUARIO> <ZONOMI_API_KEY>"
+  echo "$0 <ID_AGENCIA> <SLUG_AGENCIA> <GMAIL_USER> <GMAIL_PASS> <DOMINIO> <PUERTO_HTTP> <PUERTO_HTTPS> <UBICACION_INSTALACION> <SUPER_USUARIO> <CLAVE_BASE_DATOS> <ZONOMI_API_KEY> <IDIOMA>"
   exit 1
 fi
 
@@ -14,8 +14,9 @@ PUERTO_HTTP="$6"
 PUERTO_HTTPS="$7"
 UBICACION_INSTALACION="$8"
 SUPER_USUARIO="$9"
-CLAVE_SUPER_USUARIO="${10}"
+CLAVE_BASE_DATOS="${10}"
 ZONOMI_API_KEY="${11}"
+IDIOMA="${12}"
 
 INSTALL_SCRIPTS_DIR="$(readlink -f "$(dirname "$0")")"
 
@@ -23,7 +24,7 @@ AGENCIA="${SLUG_AGENCIA}_${ID_AGENCIA}"
 CARPETA_AGENCIA="$AGENCIA"
 DB_NAME="$AGENCIA"
 DB_USER="$AGENCIA"
-DB_PASS="$CLAVE_SUPER_USUARIO"
+DB_PASS="$CLAVE_BASE_DATOS"
 
 cd "$INSTALL_SCRIPTS_DIR"
 MYSQL_USER="$(python -c "from ambiente import ambiente; print ambiente.mysql.usuario")"
@@ -178,7 +179,7 @@ then
 fi
 
 echo "Se inicia la instalación de datos para la aplicación"
-./manage.py loaddata $("$INSTALL_SCRIPTS_DIR/utils/get_module_path.py" 'iampacks.agencia.perfil')/fixtures/perfil_initial_data.yaml
+./manage.py loadperfil "--idioma=$IDIOMA"
 
 if [ $? -ne 0 ]
 then

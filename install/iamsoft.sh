@@ -81,6 +81,9 @@ fi
 
 mkdir "$IAMSOFT_WD/collectedstatic"
 
+"$IAMSOFT_WD/manage.py" collectstatic
+"$IAMSOFT_WD/manage.py" syncdb
+
 echo "Pasos a seguir en la instalación de iamsoft:"
 echo "- Crear usuario y base de datos."
 echo "- Configurar ambiente.py"

@@ -52,9 +52,6 @@ IAMSOFT_WD="$(readlink -f "$INSTALL_SCRIPTS_DIR/../iamsoft")"
 
 ./install/iamsoft.sh "$IAMSOFT_WD" "$INSTALL_SCRIPTS_DIR"
 
-
-
-
 CIUDADES_WD="$(readlink -f "$INSTALL_SCRIPTS_DIR/..")/ciudades"
 
 mkdir "$CIUDADES_WD"

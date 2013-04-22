@@ -9,7 +9,15 @@ fi
 
 INSTALL_SCRIPTS_DIR="$1"
 
-cd "$(./utils/get_dist_packages_path.py)"
+DIST_PACKAGE_DIR="$(readlink -f "$(dirname "$(python -c 'import django;print django.__file__')")/..")"
+
+if [ $? -ne 0 ]
+then
+  echo "ERROR: No se pudo obtener el directorio dist-packages de python."
+  exit 1
+fi
+
+cd "$DIST_PACKAGE_DIR"
 
 mkdir iampacks
 cd iampacks
