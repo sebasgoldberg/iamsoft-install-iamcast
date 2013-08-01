@@ -9,7 +9,8 @@ fi
 
 INSTALL_SCRIPTS_DIR="$1"
 
-DIST_PACKAGE_DIR="$(readlink -f "$(dirname "$(python -c 'import django;print django.__file__')")/..")"
+#DIST_PACKAGE_DIR="$(readlink -f "$(dirname "$(python -c 'import django;print django.__file__')")/..")"
+DIST_PACKAGE_DIR="/usr/local/lib/python2.7/dist-packages"
 
 if [ $? -ne 0 ]
 then
