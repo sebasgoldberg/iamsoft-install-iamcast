@@ -1,6 +1,8 @@
 #!/bin/bash
 INSTALL_SCRIPTS_DIR="$(dirname "$(readlink -f "$0")")"
 
+apt-get update
+
 apt-get install make
 apt-get install bc
 apt-get install apache2
