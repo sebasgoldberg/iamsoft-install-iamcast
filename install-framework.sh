@@ -3,19 +3,19 @@ INSTALL_SCRIPTS_DIR="$(dirname "$(readlink -f "$0")")"
 
 apt-get update
 
-apt-get install make
-apt-get install bc
-apt-get install apache2
-apt-get install mysql-server
-apt-get install cython
-apt-get install libapache2-mod-wsgi
-apt-get install python-mysqldb
-apt-get install python-imaging
-apt-get install mercurial #necesario para hacer el pull de algunos pagetes a ser instalados
-apt-get install unzip
-apt-get install gettext
-apt-get install python-pip
-apt-get install curl
+apt-get -y install make
+apt-get -y install bc
+apt-get -y install apache2
+apt-get -y install mysql-server
+apt-get -y install cython
+apt-get -y install libapache2-mod-wsgi
+apt-get -y install python-mysqldb
+apt-get -y install python-imaging
+apt-get -y install mercurial #necesario para hacer el pull de algunos pagetes a ser instalados
+apt-get -y install unzip
+apt-get -y install gettext
+apt-get -y install python-pip
+apt-get -y install curl
 
 pip install Django==1.4.3
 
@@ -42,7 +42,7 @@ a2enmod ssl
 a2enmod rewrite
 service apache restart
 
-apt-get install python-coverage
+apt-get -y install python-coverage
 
 ./install/django-crispy-forms.sh
 ./install/cities_light.sh
